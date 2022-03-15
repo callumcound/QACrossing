@@ -37,7 +37,7 @@ public class VillagerController {
 	public ResponseEntity<Villager> readById(@PathVariable long id){
 		return new ResponseEntity<Villager>(this.service.readById(id), HttpStatus.OK);
 	}
-	@PutMapping("/update")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<Villager> updateVillager(@PathVariable long id, @RequestBody Villager villager){
 		return new ResponseEntity<Villager>(this.service.update(id, villager), HttpStatus.ACCEPTED);
 	}
