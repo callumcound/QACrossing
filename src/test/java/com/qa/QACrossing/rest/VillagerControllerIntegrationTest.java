@@ -2,7 +2,8 @@
 
 	import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 	import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-	import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 	import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 	import java.util.ArrayList;
@@ -27,8 +28,8 @@
 	@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 	@AutoConfigureMockMvc
 	@ActiveProfiles("test")
-	@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"classpath:villager-schema.sql",
-			 "classpath:villager-data.sql"})
+//	@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"classpath:villager-schema.sql",
+//			 "classpath:villager-data.sql"})
 	public class VillagerControllerIntegrationTest {
 		
 		@Autowired
@@ -102,4 +103,16 @@
 					.andExpect(content().json(villagersOutputAsJson));
 
 	}
+		
+		@Test
+		public void testUpdate() throws Exception {
+			Villager testVillager = new Villager("Barold", "Lazy", "Cub", 302, "cubby", "Play");
+			String testVillagerAsJSON = this.mapper.writeValueAsString(testVillager);
+			RequestBuilder req = put("/villager/update");
+			Villager testSavedVillager = new Villager(1, "Barold", "Lazy", "Cub", 302, "cubby", "Play");
+			String testSavedVillagerAsJSON = this.mapper.writeValueAsString(testSavedVillager);
+			ResultMatcher checkStatus = status().isOk();
+			ResultMatcher checkBody = content().json(testSavedVillagerAsJSON);
+			this.mvc.perform(req).andExpect(checkStatus).andExpect(checkBody);
+		}
 }
