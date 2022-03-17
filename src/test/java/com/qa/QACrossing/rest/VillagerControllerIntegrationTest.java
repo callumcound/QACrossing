@@ -2,8 +2,8 @@
 
 	import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 	import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+	import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+	import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 	import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 	import java.util.ArrayList;
@@ -28,8 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 	@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 	@AutoConfigureMockMvc
 	@ActiveProfiles("test")
-//	@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"classpath:villager-schema.sql",
-//			 "classpath:villager-data.sql"})
+	@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"classpath:villager-schema.sql",
+			"classpath:villager-data.sql"})
+
 	public class VillagerControllerIntegrationTest {
 		
 		@Autowired
@@ -41,78 +42,67 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 		public void testCreate() throws Exception {
 			Villager testVillager = new Villager("Barold", "Lazy", "Cub", 302, "cubby", "Play");
 			String testVillagerAsJSON = this.mapper.writeValueAsString(testVillager);
-			RequestBuilder req = post("/villager/create").content(testVillagerAsJSON).contentType(MediaType.APPLICATION_JSON);
+	//		RequestBuilder req = post("/villager/create").content(testVillagerAsJSON).contentType(MediaType.APPLICATION_JSON);
 
-			Villager testSavedVillager = new Villager(1, "Barold", "Lazy", "Cub", 302, "cubby", "Play");
+			Villager testSavedVillager = new Villager(2, "Barold", "Lazy", "Cub", 302, "cubby", "Play");
 			String testSavedVillagerAsJSON = this.mapper.writeValueAsString(testSavedVillager);
 		
 			ResultMatcher checkStatus = status().isCreated();
 			ResultMatcher checkBody = content().json(testSavedVillagerAsJSON);
 
-			this.mvc.perform(req).andExpect(checkStatus).andExpect(checkBody);
+			this.mvc.perform(post("/villager/create")
+					.content(testVillagerAsJSON)
+					.contentType(MediaType.APPLICATION_JSON))
+					.andExpect(checkStatus)
+					.andExpect(checkBody);
 		}
 
-//		@Test
-//		public void testCreate2() throws Exception {
-//			// URL body method headers
-//			Villager testVillager = new Villager(20, "Daffy", "Toon World", "Male");
-//			String testVillagerAsJSON = this.mapper.writeValueAsString(testVillager);
-//			RequestBuilder req = post("/villager/create").content(testVillagerAsJSON).contentType(MediaType.APPLICATION_JSON);
-	//
-//			Villager testSavedVillager = new Villager(2, 20, "Daffy", "Toon World", "Male");
-//			String testSavedVillagerAsJSON = this.mapper.writeValueAsString(testSavedVillager);
-//			// this will check the status code of my response
-//			ResultMatcher checkStatus = status().isCreated();
-//			// this will check the body of the response
-//			ResultMatcher checkBody = content().json(testSavedVillagerAsJSON);
-	//
-//			// run the request and check both matchers
-//			this.mvc.perform(req).andExpect(checkStatus).andExpect(checkBody);
-//		}
 
 		@Test
 		public void testReadById() throws Exception {
-			RequestBuilder req = get("/villager/readById/1");
 
+			Villager savedVillager = new Villager(1, "Barold", "Lazy", "Cub", 302, "cubby", "Play");
+		String savedVillagerAsJSON = this.mapper.writeValueAsString(savedVillager);			
 			ResultMatcher checkStatus = status().isOk();
-
-			Villager savedVillager = new Villager();
-			String savedVillagerAsJSON = this.mapper.writeValueAsString(savedVillager);
-
 			ResultMatcher checkBody = content().json(savedVillagerAsJSON);
+			
 
-			this.mvc.perform(req).andExpect(checkStatus).andExpect(checkBody);
+		 	this.mvc.perform(get("/villager/readById/1"))
+		 			.andExpect(checkStatus)
+		 			.andExpect(checkBody);
 		}
 		
 		@Test
 		public void testReadAll() throws Exception{
 			//makeObject
-			Villager entry  = new Villager();
+			Villager entry  = new Villager(1, "Barold", "Lazy", "Cub", 302, "cubby", "Play");
 			//makeArray
 			List<Villager> villagers = new ArrayList<>();
 			//addObjectToArray
 			villagers.add(entry);
-			String villagersOutputAsJson = this.mapper.writeValueAsString(villagers);
-			
+			String villagersOutputAsJSON = this.mapper.writeValueAsString(villagers);
+			ResultMatcher checkStatus = status().isOk();
+			ResultMatcher checkBody = content().json(villagersOutputAsJSON);
 			this.mvc.perform(get("/villager/readAll")
-					//reqBuilder
 					.contentType(MediaType.APPLICATION_JSON))
-					//result matcher
-					.andExpect(status().isOk())
-					//resultMatcher
-					.andExpect(content().json(villagersOutputAsJson));
+					.andExpect(checkStatus)
+					.andExpect(checkBody);
 
 	}
 		
 		@Test
 		public void testUpdate() throws Exception {
-			Villager testVillager = new Villager("Barold", "Lazy", "Cub", 302, "cubby", "Play");
+			Villager testVillager = new Villager(1, "Cephalobot", "Smug", "Octopus", 401, "donk donk", "Play");
 			String testVillagerAsJSON = this.mapper.writeValueAsString(testVillager);
-			RequestBuilder req = put("/villager/update");
-			Villager testSavedVillager = new Villager(1, "Barold", "Lazy", "Cub", 302, "cubby", "Play");
+
+			Villager testSavedVillager = new Villager(1, "Cephalobot", "Smug", "Octopus", 401, "donk donk", "Play");
 			String testSavedVillagerAsJSON = this.mapper.writeValueAsString(testSavedVillager);
-			ResultMatcher checkStatus = status().isOk();
+			ResultMatcher checkStatus = status().isAccepted();
 			ResultMatcher checkBody = content().json(testSavedVillagerAsJSON);
-			this.mvc.perform(req).andExpect(checkStatus).andExpect(checkBody);
+			this.mvc.perform(put("/villager/update/1")
+					.content(testVillagerAsJSON)
+					.contentType(MediaType.APPLICATION_JSON))
+					.andExpect(checkStatus)
+					.andExpect(checkBody);
 		}
 }
