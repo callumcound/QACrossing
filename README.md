@@ -12,11 +12,12 @@ I expected to have my understanding of Java and Spring Boot to be challenged as 
 What went well? What didn't go as planned?
 --
 I think writing the initial codebase went fairly smoothly as I understood much of the content whilst learning in structured time. Initially, my poor use of git and github hampered me because it lead to the deletion of chunks of the codebase (maybe not something I should be admitting here!) but in the end I feel like the mistakes I made with git have strengthened my understansing of best practice for the future so as they say every mistake is a lesson! :)
+I also feel like I could improve on my understanding of test writing with practice, as this is something that I struggled with throughout.
 
 Possible improvements for future revisions of the project:
 --
 I know that I could improve on the formatting of the code (the Birthday column in particular) and also it could be refactored somewhat to make it look more clean and legible.
-Beyond this, there is scope to add additional functionality, such as a method for rating villagers and listing them in order of preference.
+Beyond this, there is scope to add additional functionality, such as a method for rating villagers and listing them in order of preference, and a method to list emotion animations for each character.
 
 Finally, the reciepts! (screenshots)
 --
