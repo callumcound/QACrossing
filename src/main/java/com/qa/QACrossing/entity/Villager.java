@@ -55,17 +55,6 @@ public class Villager {
 		this.hobbies = hobbies;
 	}
 
-	public Villager(long id, String name, String personality, String species, int birthday,
-			String catchphrase, String hobbies) {
-		this.id = id;
-		this.name = name;
-		this.personality = personality;
-		this.species = species;
-		this.birthday = birthday;
-		this.catchphrase = catchphrase;
-		this.hobbies = hobbies;
-	}
-
 	public long getId() {
 		return id;
 	}
